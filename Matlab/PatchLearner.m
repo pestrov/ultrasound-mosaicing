@@ -7,9 +7,10 @@ addpath('calculateTransformFromSet.m')
     registrationError = 0;
     localTranforms = {};
     angleChange = 360/totalImages;
-    for imageNumber = 1:5
-        image = imread(strcat('VCropedImages/VCroped',sprintf('%d',totalImages - imageNumber),'.png'));
+    for imageNumber = 1:9
+        image = imread(strcat('VCroped',sprintf('%d',totalImages - imageNumber),'.png'));
         rotatedImage = imageRotate(image, angleChange*(imageNumber - 1));
+        imwrite(rotatedImage, strcat('VRotated',sprintf('%d',imageNumber),'.png'));
         %[rotatedImage, cropRect] = adjustImage(image, angleChange*(imageNumber - 1), radius, [0 0]);
         %imageMask = getImageMask(image, angleChange*(imageNumber - 1), radius);
         if imageNumber == 1

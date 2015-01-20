@@ -1,34 +1,53 @@
 function detectedTranforms = getImagePatches(firstImage, secondImage, radius, angleChange, imageNumber)
-difference = intmax;
+
 imageSize1 = size(firstImage)
 firstImageXCenter = imageSize1(1)/2;
 firstImageYCenter = imageSize1(2)/2;
-imageSize2 = size(secondImage)
+
+imageSize2 = size(secondImage);
 secondImageXCenter = imageSize2(1)/2
 secondImageYCenter = imageSize2(2)/2
-cropedFirstImage = firstImage;%imcrop(firstImage, cropRect);
-cropedSecondImage = secondImage;%imcrop(secondImage, cropRect);
+
+cropedFirstImage = firstImage;
+cropedSecondImage = secondImage;
+
+%Variables for detection
 detectedTranforms = {};
-windowWidth = 50;
 bestPatch = 0;
 secondBestDiff = 0;
 secondBestPatch = 0;
+difference = intmax;
+
+%Patch matching params
+windowWidth = 50;
+patchSize = 80;
  
 xTranslation = radius * (cosd(angleChange*imageNumber) - cosd(angleChange*(imageNumber - 1)))
 yTranslation = radius * (sind(angleChange*imageNumber) - sind(angleChange*(imageNumber - 1)))
 
 for firstXShift = -windowWidth:5:windowWidth
     for firstYShift = -windowWidth:5:windowWidth
-        %patchRect = [cropRect(3)/2+firstXShift cropRect(4)/2 + firstYShift 32 32];
-        patchRect = [imageSize1(1)/2 + firstXShift imageSize1(2)/2 + firstYShift 32 32];
+        firstXShift = 0;
+        firstYShift = 0;
+        %Create patch from first image
+        patchX = imageSize1(1)/2 + firstXShift - patchSize/2;
+        patchY = imageSize1(2)/2 + firstYShift - patchSize/2;
+        patchRect = [patchX patchY patchSize patchSize]
         firstImagePatch = imcrop(cropedFirstImage, patchRect);
-        size(firstImagePatch);
+        
         bestPatch = 0;
 
         for xShift = -windowWidth:5:windowWidth
             for yShift = -windowWidth:5:windowWidth
-                secondPatchRect = [secondImageXCenter+xShift-xTranslation secondImageYCenter+yShift-yTranslation 32 32];
+                xShift = 0;
+                yShift = 0;
+                
+                %Create patch from second image
+                secondPatchX = secondImageXCenter + xShift - xTranslation - patchSize/2;
+                secondPatchY = secondImageYCenter + yShift - yTranslation - patchSize/2;
+                secondPatchRect = [secondPatchX secondPatchY patchSize patchSize]
                 secondImagePatch = imcrop(cropedSecondImage, secondPatchRect);
+                
 %                 imshow(firstImagePatch), figure, imshow(secondImagePatch);
 %                 pause(15);
     
