@@ -1,7 +1,7 @@
 function positionsCellsArray = adjustTransforms(summedTransfroms)
 
 totalTransfroms = numel(summedTransfroms);
-radius = 2500;
+radius = 340;
 angleChange = 360/totalTransfroms;
 
 W(1,1) = 1;%X1
@@ -33,8 +33,8 @@ for pair = 1:totalTransfroms
     deltas(pair) = summedTransfroms{pair}(1);
     deltas(totalTransfroms + pair) = summedTransfroms{pair}(2);
     if pair ~= totalTransfroms 
-        deltas(totalTransfroms * 2 + 2 + pair) = radius * (cosd(angleChange*pair) - cosd(angleChange*(pair-1)));
-        deltas(totalTransfroms * 3 + 1 + pair) = radius * (sind(angleChange*pair) - sind(angleChange*(pair-1)));
+        deltas(totalTransfroms * 2 + 2 + pair) = 1*radius * (cosd(angleChange*pair) - cosd(angleChange*(pair-1)));
+        deltas(totalTransfroms * 3 + 1 + pair) = 1*radius * (sind(angleChange*pair) - sind(angleChange*(pair-1)));
     end
 end
 

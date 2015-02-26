@@ -1,15 +1,16 @@
 function [adjustedImage,newCenter] = placeImage(image, previousCenter, localTransfrom)
 localTransfrom
     absPositions = 1;
-    boxXSize = 6500;
-    boxYSize = 5200;
+    boxXSize = 1500;
+    boxYSize = 1000;
     adjustedImage = zeros(boxYSize,boxXSize);
     imageSize = size(image);
     
     if absPositions == 1
-        xCoor = int32(localTransfrom(1)) - int32(imageSize(1)/2) + previousCenter(1);
-        yCoor = int32(localTransfrom(2)) - int32(imageSize(2)/2) + previousCenter(2);
+        xCoor = int32(localTransfrom(1)) + previousCenter(1) - int32(imageSize(2)/2);
+        yCoor = int32(localTransfrom(2)) + previousCenter(2) - int32(imageSize(1)/2);
         newCenter = [int32(localTransfrom(1)), int32(localTransfrom(2))];
+        %newCenter = [xCoor + imageSize(1)/2, yCoor + imageSize(2)/2]
        % newCenter = [xCoor yCoor];
     else
         xCoor = previousCenter(1) + int32(localTransfrom(1)) - int32(imageSize(1)/2)
