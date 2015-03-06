@@ -1,10 +1,7 @@
-function detectedTranforms = getImagePatches(firstImage, secondImage, radius, angles, imageNumber)
-
-imageNumber
+function detectedTranforms = getImagePatches(firstImage, secondImage, radius, angles, imageNumber, folderName)
 
 imageSize1 = size(firstImage);
-%imshow(firstImage);
-%pause(5);
+
 firstImageXCenter = imageSize1(2)/2;
 firstImageYCenter = imageSize1(1)/2;
 
@@ -24,7 +21,7 @@ difference = intmax;
 secondDiff = intmax;
 
 %Patch matching params
-windowWidth = 50;
+windowWidth = 100;
 patchSize = 32;
 patchArea = patchSize*patchSize;
 patchIntersectionThreshold = patchArea*0.3;
@@ -48,17 +45,13 @@ for firstXShift = -windowWidth:5:windowWidth
         
         %patchOnFirstImage = insertShape(firstImage, 'rectangle', patchRect, 'LineWidth', 2);
         %imwrite(patchOnFirstImage, strcat('AllPatches/',sprintf('%d',1),'-',sprintf('%d',firstXShift),'-',sprintf('%d',firstYShift),'ImagePatch.png'));
-        %imshow(firstImagePatch);
-        %pause(5);
+
         
         bestPatch = 0;
         
         for xShift = -windowWidth:5:windowWidth
             for yShift = -windowWidth:5:windowWidth
                 %Create patch from second image
-                xTranslation;
-                yTranslation;
-                secondImageXCenter;
                 secondPatchX = secondImageXCenter + xShift - xTranslation - patchSize/2;
                 secondPatchY = secondImageYCenter + yShift - yTranslation - patchSize/2;
                 secondPatchRect = [secondPatchX secondPatchY patchSize patchSize];
@@ -80,17 +73,16 @@ for firstXShift = -windowWidth:5:windowWidth
                 end
             end
         end
-%         999
-%         pause(1000);
+        
         patchIsNotGoodEnough = 0;
         
-        for xShift = -windowWidth:2:windowWidth
+        for xShift = -windowWidth:5:windowWidth
             
             if patchIsNotGoodEnough
                 break;
             end
             
-            for yShift = -windowWidth:2:windowWidth
+            for yShift = -windowWidth:5:windowWidth
                 %Create patch from second image
                 secondPatchX = secondImageXCenter + xShift - xTranslation - patchSize/2;
                 secondPatchY = secondImageYCenter + yShift - yTranslation - patchSize/2;
@@ -110,6 +102,7 @@ for firstXShift = -windowWidth:5:windowWidth
                 end
             end
         end
+        
         if patchIsNotGoodEnough == 0 
             if bestPatch ~= 0
                 finalFirstImagePatch = firstImagePatch;
@@ -122,14 +115,14 @@ for firstXShift = -windowWidth:5:windowWidth
                 patchNumber = size(detectedTranforms);
                 patchNumber = patchNumber(2)
                 
-                %imwrite(finalFirstImagePatch, strcat('Patches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'FirstPatch.png'));
-                %imwrite(finalBestPatch, strcat('Patches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'MatchingPatch.png'));
                 patchOnFirstImage = insertShape(firstImage, 'rectangle', patchRect, 'LineWidth', 2);
                 patchOnSecondImage = insertShape(secondImage, 'rectangle', bestPatchRect, 'LineWidth', 2);
-                imwrite(patchOnFirstImage, strcat('PPatches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'ImageWithPath.png'));
-                imwrite(patchOnSecondImage, strcat('PPatches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'ImageWithPath2.png'));
+                
+                imwrite(patchOnFirstImage, strcat('Output/','Data/',folderName,'/Patches/',sprintf('%d',imageNumber),' - ',sprintf('%d',patchNumber),' ImageWithPatch.png'));
+                imwrite(patchOnSecondImage, strcat('Output/','Data/',folderName,'/Patches/',sprintf('%d',imageNumber),' - ',sprintf('%d',patchNumber),' ImageWithPatch 2.png'));
             end
         end
+        
         difference = intmax;
         currentDifference = intmax;
     end   
@@ -139,6 +132,7 @@ celldisp(detectedTranforms);
 detectedTranformsSize = size(detectedTranforms);
 
 totalPatches = detectedTranformsSize(2)
+
 if totalPatches == 0
     'Default'
     detectedTranforms = {[xTranslation yTranslation]};
@@ -146,10 +140,5 @@ end
 
 end
 
-%            bestFirstPatch = firstImagePatch;
-%imshow(finalFirstImagePatch), figure, imshow(finalBestPatch), figure, imshow(finalSecondBestPatch), figure, imshow(cropedFirstImage), figure,imshow(cropedSecondImage) ;
-%  finalBestPatchRect
-%  secondBestPatchRect
-%  finalFirstPatchRect
 
  

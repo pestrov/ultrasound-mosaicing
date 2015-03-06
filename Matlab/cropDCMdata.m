@@ -2,7 +2,7 @@
 %different then default cropping rect
 function cropDCMdata(startImage, totalImages, folderName, manualCrop)
     %Default cropping value
-    cropRect = [99   95  346  748];
+    cropRect = [99   90  346  748];
     
     if manualCrop == 1
         [~,~,~,cropRect] = imcrop(strcat(inputFolder,DCMSubPath,folderName,DCMimageNameForNumber(startImage)));

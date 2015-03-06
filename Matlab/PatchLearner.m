@@ -1,41 +1,41 @@
-function PatchLearner(radius)
+function patchLearner(radius,folderName)
+
+start = 20;
+finish = 40;
 
 addpath('getImagePacthes.m')
 addpath('calculateTransformFromSet.m')
 addpath('placeImage.m')
 addpath('displayImagesAtPositions.m')
 
-totalImages = 71;
+totalImages = length(dir(fullfile(strcat('Output/','Rotated/',folderName),'*.png')));
+
 previousRotatedImage = 0;
 localTranforms = {};
 allTranforms = {};
-angleChange = 360/totalImages;
-load('PAngles.mat','Pangles')
-angles = Pangles;
-start = 1;
-finish = 72;
+load(strcat('Input/','DCM/',folderName,'/angles.mat'),'angles');
 xCors = [];
 yCors = [];
+
+mkdir(strcat('Output/','Data/',folderName,'/Patches'));
+mkdir(strcat('Output/','Data/',folderName));
+
 for imageNumber = start:finish
-    rotatedImage = imread(strcat('Phantom/Rot',sprintf('%d',imageNumber),'.png'));
-%     rotatedImage = imageRotate(image, angleChange*(imageNumber - 1));
-%     imwrite(rotatedImage, strcat('VRotated',sprintf('%d',imageNumber),'.png'));
+    imageNumber
+    rotatedImage = imread(strcat('Output/','Rotated/',folderName,'/',sprintf('%d',imageNumber),'.png'));
     if imageNumber ~= start
-        detectedTranforms = getImagePatches(previousRotatedImage,rotatedImage, radius, angles, imageNumber);
-        celldisp(detectedTranforms);
+        detectedTranforms = getImagePatches(previousRotatedImage,rotatedImage, radius, angles, imageNumber, folderName);
         localTForm = calculateTransformFromSet(detectedTranforms);
-        localTForm
-        xCors = [xCors, localTForm(1)]
-        yCors = [yCors, localTForm(2)]
+        xCors = [xCors, localTForm(1)];
+        yCors = [yCors, localTForm(2)];
         xFinal = cumsum(xCors)
         yFinal = cumsum(yCors)
-        %cpselect(previousRotatedImage, rotatedImage);
-        %pause(1000);
         
-        localTranforms = [localTranforms, {localTForm}]
+        localTranforms = [localTranforms, {localTForm}];
         allTranforms = [allTranforms, {detectedTranforms}];
-        save('PhantomLocalTransforms.mat', 'localTranforms');
-        save('PhantomAllDetectedTransforms.mat', 'allTranforms');
+        
+        save(strcat('Output/', 'Data/', folderName, '/LocalTransforms.mat'), 'localTranforms');
+        save(strcat('Output/', 'Data/', folderName, '/AllDetectedTransforms.mat'), 'allTranforms');
     end
     previousRotatedImage = rotatedImage;
 end
@@ -43,7 +43,6 @@ end
 celldisp(localTranforms);
 
 pause(1000);
-celldisp(localTranforms);
 
 % xTranslation = radius * (cosd(angleChange*1) - cosd(angleChange*(totalImages)));
 % yTranslation = radius * (sind(angleChange*1) - sind(angleChange*(totalImages)));
@@ -53,7 +52,7 @@ yTranslation = radius * (sind(0) - sind(355));
 
 summedTransfroms = [{[xTranslation yTranslation]}, localTranforms];
 
-save('PTransforms.mat', 'summedTransfroms');
+save('Transforms.mat', 'summedTransfroms');
 %load('Transforms.mat', 'summedTransfroms');    
 
 positions = adjustTransforms(summedTransfroms)
