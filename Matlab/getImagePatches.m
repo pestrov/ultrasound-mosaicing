@@ -1,8 +1,8 @@
-function detectedTranforms = getImagePatches(firstImage, secondImage, radius, angleChange, imageNumber)
+function detectedTranforms = getImagePatches(firstImage, secondImage, radius, angles, imageNumber)
 
 imageNumber
 
-imageSize1 = size(firstImage)
+imageSize1 = size(firstImage);
 %imshow(firstImage);
 %pause(5);
 firstImageXCenter = imageSize1(2)/2;
@@ -29,8 +29,12 @@ patchSize = 32;
 patchArea = patchSize*patchSize;
 patchIntersectionThreshold = patchArea*0.3;
 
-xTranslation = radius * (cosd(angleChange*imageNumber) - cosd(angleChange*(imageNumber - 1)));
-yTranslation = radius * (sind(angleChange*imageNumber) - sind(angleChange*(imageNumber - 1)));
+%angleChange = angles(imageNumber);
+xTranslation = radius * (cosd(angles(imageNumber)) - cosd(angles(imageNumber - 1)))
+yTranslation = radius * (sind(angles(imageNumber)) - sind(angles(imageNumber - 1)))
+        
+%xTranslation = radius * (cosd(angleChange*imageNumber) - cosd(angleChange*(imageNumber - 1)));
+%yTranslation = radius * (sind(angleChange*imageNumber) - sind(angleChange*(imageNumber - 1)));
 
 for firstXShift = -windowWidth:5:windowWidth
     firstXShift
@@ -42,16 +46,19 @@ for firstXShift = -windowWidth:5:windowWidth
         patchRect = [patchX patchY patchSize patchSize];
         firstImagePatch = imcrop(cropedFirstImage, patchRect);
         
-       % patchOnFirstImage = insertShape(firstImage, 'rectangle', patchRect, 'LineWidth', 2);
+        %patchOnFirstImage = insertShape(firstImage, 'rectangle', patchRect, 'LineWidth', 2);
         %imwrite(patchOnFirstImage, strcat('AllPatches/',sprintf('%d',1),'-',sprintf('%d',firstXShift),'-',sprintf('%d',firstYShift),'ImagePatch.png'));
         %imshow(firstImagePatch);
         %pause(5);
         
         bestPatch = 0;
         
-        for xShift = -windowWidth:10:windowWidth
-            for yShift = -windowWidth:10:windowWidth
+        for xShift = -windowWidth:5:windowWidth
+            for yShift = -windowWidth:5:windowWidth
                 %Create patch from second image
+                xTranslation;
+                yTranslation;
+                secondImageXCenter;
                 secondPatchX = secondImageXCenter + xShift - xTranslation - patchSize/2;
                 secondPatchY = secondImageYCenter + yShift - yTranslation - patchSize/2;
                 secondPatchRect = [secondPatchX secondPatchY patchSize patchSize];
@@ -59,7 +66,7 @@ for firstXShift = -windowWidth:5:windowWidth
                 %imshow(firstImagePatch), figure, imshow(secondImagePatch);
                 %pause(15);
                 
-                patchOnSecondImage = insertShape(secondImage, 'rectangle', secondPatchRect, 'LineWidth', 2);
+                %patchOnSecondImage = insertShape(secondImage, 'rectangle', secondPatchRect, 'LineWidth', 2);
                 %imwrite(patchOnSecondImage, strcat('AllPatches/',sprintf('%d',imageNumber),'-',sprintf('%d',xShift),'-',sprintf('%d',yShift),'ImagePatch.png'));
                 
                 if size(firstImagePatch) == size(secondImagePatch)
@@ -119,8 +126,8 @@ for firstXShift = -windowWidth:5:windowWidth
                 %imwrite(finalBestPatch, strcat('Patches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'MatchingPatch.png'));
                 patchOnFirstImage = insertShape(firstImage, 'rectangle', patchRect, 'LineWidth', 2);
                 patchOnSecondImage = insertShape(secondImage, 'rectangle', bestPatchRect, 'LineWidth', 2);
-                imwrite(patchOnFirstImage, strcat('RPatches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'ImageWithPath.png'));
-                imwrite(patchOnSecondImage, strcat('RPatches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'ImageWithPath2.png'));
+                imwrite(patchOnFirstImage, strcat('PPatches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'ImageWithPath.png'));
+                imwrite(patchOnSecondImage, strcat('PPatches/',sprintf('%d',imageNumber),'-',sprintf('%d',patchNumber),'ImageWithPath2.png'));
             end
         end
         difference = intmax;

@@ -10,30 +10,37 @@ previousRotatedImage = 0;
 localTranforms = {};
 allTranforms = {};
 angleChange = 360/totalImages;
-load('Angles.mat','angles')
+load('PAngles.mat','Pangles')
+angles = Pangles;
 start = 1;
-finish = 10;
-
+finish = 72;
+xCors = [];
+yCors = [];
 for imageNumber = start:finish
-    rotatedImage = imread(strcat('Leg8/Rot',sprintf('%d',imageNumber),'.png'));
+    rotatedImage = imread(strcat('Phantom/Rot',sprintf('%d',imageNumber),'.png'));
 %     rotatedImage = imageRotate(image, angleChange*(imageNumber - 1));
 %     imwrite(rotatedImage, strcat('VRotated',sprintf('%d',imageNumber),'.png'));
     if imageNumber ~= start
-        detectedTranforms = getImagePatches(previousRotatedImage,rotatedImage, radius, angles(imageNumber), imageNumber);
+        detectedTranforms = getImagePatches(previousRotatedImage,rotatedImage, radius, angles, imageNumber);
         celldisp(detectedTranforms);
         localTForm = calculateTransformFromSet(detectedTranforms);
         localTForm
-        
+        xCors = [xCors, localTForm(1)]
+        yCors = [yCors, localTForm(2)]
+        xFinal = cumsum(xCors)
+        yFinal = cumsum(yCors)
         %cpselect(previousRotatedImage, rotatedImage);
         %pause(1000);
         
-        localTranforms = [localTranforms, {localTForm}];
+        localTranforms = [localTranforms, {localTForm}]
         allTranforms = [allTranforms, {detectedTranforms}];
-        save('LocalTransforms.mat', 'localTranforms');
-        save('AllDetectedTransforms.mat', 'allTranforms');
+        save('PhantomLocalTransforms.mat', 'localTranforms');
+        save('PhantomAllDetectedTransforms.mat', 'allTranforms');
     end
     previousRotatedImage = rotatedImage;
 end
+
+celldisp(localTranforms);
 
 pause(1000);
 celldisp(localTranforms);
@@ -46,7 +53,7 @@ yTranslation = radius * (sind(0) - sind(355));
 
 summedTransfroms = [{[xTranslation yTranslation]}, localTranforms];
 
-save('Transforms.mat', 'summedTransfroms');
+save('PTransforms.mat', 'summedTransfroms');
 %load('Transforms.mat', 'summedTransfroms');    
 
 positions = adjustTransforms(summedTransfroms)

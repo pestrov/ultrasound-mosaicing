@@ -1,11 +1,12 @@
 function displayImagesAtPositions(positions)
 xOfImages = [];
 yOfImages = [];
-center = [1000.0 400.0];
-for imageNumber = 1:5
+center = [1300.0 800.0];
+newCenter = center;
+for imageNumber = 1:71
     imageNumber
     image = imread(strcat('Leg8/Rot',sprintf('%d',imageNumber),'.png'));
-    [rotatedImage, newCenter] = placeImage(image,center, positions{imageNumber});
+    [rotatedImage, newCenter] = placeImage(image,newCenter, positions{imageNumber});
 %     shift = [0 0];
 %     shift = [20 -25];
 %     if imageNumber > 10

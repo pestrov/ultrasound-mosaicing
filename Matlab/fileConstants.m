@@ -1,0 +1,5 @@
+inputFolder = 'Input/'
+outputFolder = 'Output/'
+cropedSubPath = 'Croped/'
+rotatedSubPath = 'Rotated/'
+DCMSubPath = 'DCM/'
