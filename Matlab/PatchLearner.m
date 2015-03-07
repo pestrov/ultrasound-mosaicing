@@ -1,7 +1,7 @@
 function patchLearner(radius,folderName)
 
-start = 20;
-finish = 40;
+start = 35;
+finish = 36;
 
 addpath('getImagePacthes.m')
 addpath('calculateTransformFromSet.m')
@@ -56,7 +56,7 @@ save('Transforms.mat', 'summedTransfroms');
 %load('Transforms.mat', 'summedTransfroms');    
 
 positions = adjustTransforms(summedTransfroms)
-displayImagesAtPositions(positions);
+displayImagesAtPositions(positions,imageFolder);
   
 for transform = 1:71
     detectedTranforms = allTranforms{transform};

@@ -21,7 +21,7 @@ difference = intmax;
 secondDiff = intmax;
 
 %Patch matching params
-windowWidth = 100;
+windowWidth = 150;
 patchSize = 32;
 patchArea = patchSize*patchSize;
 patchIntersectionThreshold = patchArea*0.3;
