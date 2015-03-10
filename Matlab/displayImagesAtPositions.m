@@ -3,7 +3,7 @@ xOfImages = [];
 yOfImages = [];
 newCenter = [1300.0 800.0];
 positionsSize = size(positions);
-imagesNumber = 14;%positionsSize(2);
+imagesNumber = 33;%positionsSize(2);
 
 for imageNumber = 0:imagesNumber-1
     

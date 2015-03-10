@@ -2,7 +2,7 @@
 %array in the Input/DCM/foldername for that and set withAnglesFile to 1.
 %Default angles are used otherwise
 function  rotateCropedImages(startImage, totalImages, folderName, withAnglesFile)
-    angles = loadAngles(totalImages, folderName, withAnglesFile)
+    angles = loadAngles(totalImages, folderName, withAnglesFile);
     
     mkdir(strcat('Output/','Rotated/',folderName));
     

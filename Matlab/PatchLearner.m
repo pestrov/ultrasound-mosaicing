@@ -1,7 +1,7 @@
 function patchLearner(radius,folderName)
 
-start = 35;
-finish = 36;
+start = 23;
+finish = 71;
 
 addpath('getImagePacthes.m')
 addpath('calculateTransformFromSet.m')

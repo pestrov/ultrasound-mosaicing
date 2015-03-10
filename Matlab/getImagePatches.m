@@ -19,9 +19,26 @@ secondBestDiff = 0;
 secondBestPatch = 0;
 difference = intmax;
 secondDiff = intmax;
+patchNumber = 0;
 
 %Patch matching params
-windowWidth = 150;
+windowWidth = 50;
+if imageNumber == 5
+    windowWidth = 150;
+end
+
+if imageNumber > 22
+    if imageNumber < 34
+        windowWidth = 150;
+    end
+end
+
+if imageNumber > 50
+    if imageNumber < 58
+        windowWidth = 150;
+    end
+end
+
 patchSize = 32;
 patchArea = patchSize*patchSize;
 patchIntersectionThreshold = patchArea*0.3;
@@ -125,7 +142,10 @@ for firstXShift = -windowWidth:5:windowWidth
         
         difference = intmax;
         currentDifference = intmax;
-    end   
+    end 
+    if patchNumber > 20
+        break
+    end
 end
 celldisp(detectedTranforms);
 
