@@ -1,19 +1,16 @@
 function registrationError = getRegistrationErrorFor(radius)
 center = [1200.0 1200.0];
-addpath('getImagePacthes.m')
-addpath('calculateTransformFromSet.m')
     previousRotatedImage = 0;
     previousMask = 0;
     registrationError = 0;
-    load('PAngles.mat','Pangles')
-    angles = Pangles;
+    load('Input/DCM/US 3-5-15/Angles.mat','angles')
     for imageNumber = 1:72
-        rotatedImage = imread(strcat('Phantom/Rot',sprintf('%d',imageNumber),'.png'));
+        rotatedImage = imread(strcat('Output/Rotated/US 3-5-15/',sprintf('%d',imageNumber),'.png'));
         xTranslation = radius * cosd(angles(imageNumber));
         yTranslation = radius * sind(angles(imageNumber));
         [rotatedImage, newCenter] = placeImage(rotatedImage, center, [xTranslation yTranslation]);
         
-        image = imread(strcat('Phantom/Rot',sprintf('%d',imageNumber),'.png'));
+        image = imread(strcat('Output/Croped/US 3-5-15/',sprintf('%d',imageNumber),'.png'));
         imageMask = getImageMask(image, angles(imageNumber), radius);
 
         if imageNumber == 1
@@ -28,6 +25,7 @@ addpath('calculateTransformFromSet.m')
         previousMask = imageMask;
         previousRotatedImage = rotatedImage;
     end
+
      registrationError
      radius
   

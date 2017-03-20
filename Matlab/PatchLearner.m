@@ -1,6 +1,6 @@
 function patchLearner(radius,folderName)
 
-start = 23;
+start = 1;
 finish = 71;
 
 addpath('getImagePacthes.m')

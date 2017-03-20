@@ -1,6 +1,6 @@
 function [adjustedImage,newCenter] = placeImage(image, previousCenter, localTransfrom)
     absPositions = 0;
-    boxXSize = 2300;
+    boxXSize = 1600;
     boxYSize = 2000;
     adjustedImage = zeros(boxYSize,boxXSize);
     imageSize = size(image);

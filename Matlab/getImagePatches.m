@@ -23,25 +23,75 @@ patchNumber = 0;
 
 %Patch matching params
 windowWidth = 50;
-if imageNumber == 5
-    windowWidth = 150;
-end
-
-if imageNumber > 22
-    if imageNumber < 34
-        windowWidth = 150;
-    end
-end
-
-if imageNumber > 50
-    if imageNumber < 58
-        windowWidth = 150;
-    end
-end
+% if imageNumber == 5
+%     windowWidth = 150;
+% end
+% 
+% if imageNumber > 22
+%     if imageNumber < 34
+%         windowWidth = 150;
+%     end
+% end
+% 
+% if imageNumber > 50
+%     if imageNumber < 58
+%         windowWidth = 150;
+%     end
+% end
 
 patchSize = 32;
 patchArea = patchSize*patchSize;
 patchIntersectionThreshold = patchArea*0.3;
+
+'Start'
+%firstImageSpace = imcrop(firstImage, [firstImageXCenter*4/5 firstImageYCenter*4/5 firstImageXCenter * 1/5 firstImageYCenter * 1/5]);
+%secondImageSpace = imcrop(secondImage, [secondImageXCenter*4/5 secondImageYCenter*4/5 secondImageXCenter * 1/5 secondImageYCenter * 1/5]);
+
+%New code
+[firstImageSpace firstImageRect] = imcrop(firstImage, [floor(firstImageXCenter*4/5) floor(firstImageYCenter*4/5) 99 99]);
+[secondImageSpace secondImageRect] = imcrop(secondImage, [floor(secondImageXCenter*4/5) floor(secondImageYCenter*4/5)  99 99]);
+%imshow(firstImageSpace,'DisplayRange',[0 255]);
+%imshow(secondImageSpace,'DisplayRange',[0 255]);
+
+firstImageSpaceSize = size(firstImageSpace);
+secondImageSpaceSize = size(secondImageSpace);
+
+firstPatches = im2col(firstImageSpace, [patchSize patchSize]);
+secondPatches = im2col(secondImageSpace, [patchSize patchSize]);
+
+secondPatchesSize = size(secondPatches);
+totalTargetPatches = secondPatchesSize(2);
+allDists = vl_alldist2(firstPatches, secondPatches);
+
+[minDists, indexes] = min(allDists');
+
+columns = cumsum(ones(size(indexes)));
+allDists(sub2ind(size(allDists), columns, indexes)) = intmax;
+
+[secondMinDists, secondMinIndexes] = min(allDists');
+patchOverlap = patchSize/4;
+
+h2 = firstImageSpaceSize(1);
+for index = 1:totalTargetPatches
+    i = indexes(index);
+    i: min(patchOverlap, mod(i,h2)); %down
+    i - min(patchOverlap, mod(i,h2)) + 1: i-1; %up
+    i: h2: min(i+h2*patchOverlap,totalTargetPatches); %right
+    max(i-h2*patchOverlap,1): h2: i; %left
+end
+%New code
+
+
+x = meshgrid(1:4,1:4);
+y = x';
+patchSize = 2
+xCoors = im2col(x,[patchSize patchSize])
+yCoors = im2col(y,[patchSize patchSize]);
+xCor = xCoors(10)
+yCor = yCoors(10)
+'Done'
+%size(allDists)
+pause(1000);
 
 %angleChange = angles(imageNumber);
 xTranslation = radius * (cosd(angles(imageNumber)) - cosd(angles(imageNumber - 1)))
